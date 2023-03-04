@@ -1,6 +1,7 @@
 use std::rc::Rc;
 use yew::prelude::*;
 use crate::stats::BoardState;
+use log;
 
 #[derive(Properties, PartialEq, Debug, Clone)]
 pub struct StickerSlotProps {
@@ -12,10 +13,9 @@ pub struct StickerSlotProps {
 
 #[function_component]
 pub fn StickerSlot(props: &StickerSlotProps) -> Html {
-	let is_checked = use_state(|| false);
 	html! {
 		<div onclick={props.on_click.clone()} class="sticker-slot">
-		<img src={format!("img/sticker-{}.png", props.row * 8 + props.col)} class={if *is_checked {"sticker-visible"} else {"sticker-invisible"} }/>
+		<img src={format!("img/sticker-{}.png", props.row * 8 + props.col)} class={if props.is_checked {"sticker-visible"} else {"sticker-invisible"} }/>
 		</div>
 	}
 }
@@ -31,7 +31,7 @@ impl Reducible for StickerBoardState {
 	type Action = StickerBoardClick;
 
 	fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
-		dbg!("reducing!");
+		log::info!("reducing! flipping state {} at {},{}", self.0.is_sticker(action.row,action.col), action.row, action.col);
 		Self(self.0.toggle(action.row, action.col)).into()
 	}
 }
@@ -46,7 +46,10 @@ pub fn StickerBoard() -> Html {
 
 			let toggle_sticker = {
 				let board_state = board_state.clone();
-				Callback::from(move |_| board_state.dispatch(StickerBoardClick{row: r, col: c}))
+				Callback::from(move |_|{
+					log::info!("dispatching at {},{}", r, c); 
+					board_state.dispatch(StickerBoardClick{row: r, col: c})
+				})
 			};
 			html!{
 				<StickerSlot row={r} col={c} is_checked={board_state.0.is_sticker(r,c)} on_click={toggle_sticker} />
