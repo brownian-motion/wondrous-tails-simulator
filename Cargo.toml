@@ -1,12 +1,23 @@
 [package]
-name = "wondrous-tails-simulator"
+name = "wondrous_tails_simulator"
 version = "0.1.0"
 edition = "2021"
 authors = ["JJ Brown"]
 description = "A WASM-based simulator for Wondrous Tails"
 license = "MIT"
+default-run = "webapp"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 yew = { version = "0.20.0", features = ["csr"] }
+
+[[bin]]
+name = "webapp"
+
+[[bin]]
+name = "simulator"
+required-features = ["simulator"]
+
+[features]
+simulator = []
