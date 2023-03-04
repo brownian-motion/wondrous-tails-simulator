@@ -1,5 +1,10 @@
 body {
 	text-align: center;
+	background-color: rgb(240, 240, 255);
+}
+
+.root>*{
+	margin: 20px;
 }
 
 .sticker-slot {
@@ -16,7 +21,6 @@ body {
 	background-image: url("img/sticker-board.png");
 	background-repeat: no-repeat;
 	background-size: cover;
-	border: 1px dashed darkgoldenrod;
 	overflow: visible;
 }
 
@@ -37,4 +41,20 @@ body {
 }
 .sticker-slot:hover img.sticker-invisible {
 	opacity: 25%;
+}
+
+
+.inline-container>*{
+	display: inline-block;
+	vertical-align: middle;
+	margin: 5px;
+}
+
+.row>* {
+	display: inline-block;
+	vertical-align: middle;
+}
+.col>* {
+	display: block;
+	align: middle;
 }
