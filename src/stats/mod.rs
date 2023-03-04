@@ -3,3 +3,6 @@ pub use board::*;
 
 mod shuffle_results;
 pub use shuffle_results::*;
+
+mod tails_sim;
+pub use tails_sim::*;

@@ -97,7 +97,7 @@ impl IntoIterator for BoardState {
 	}
 }
 
-#[derive(Default,Debug)]
+#[derive(Default,Debug,PartialEq)]
 pub struct BoardCounter {
 	counts: [u32;4],
 	total: u32,
