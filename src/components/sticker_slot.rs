@@ -1,39 +1,60 @@
+use std::rc::Rc;
 use yew::prelude::*;
+use crate::stats::BoardState;
 
 #[derive(Properties, PartialEq, Debug, Clone)]
 pub struct StickerSlotProps {
-	// TODO: sticker image!
-	pub image_path: AttrValue,
+	pub row: usize,
+	pub col: usize,
+	pub is_checked: bool,
+	pub on_click: Callback<MouseEvent>,
 }
 
 #[function_component]
 pub fn StickerSlot(props: &StickerSlotProps) -> Html {
 	let is_checked = use_state(|| false);
-	let on_click = {
-		let is_checked = is_checked.clone();
-		Callback::from(move |_| {
-			is_checked.set(!*is_checked)
-		})
-	};
 	html! {
-		<div onclick={on_click} class="sticker-slot">
-		<img src={props.image_path.clone()} class={if *is_checked {"sticker-visible"} else {"sticker-invisible"} }/>
+		<div onclick={props.on_click.clone()} class="sticker-slot">
+		<img src={format!("img/sticker-{}.png", props.row * 8 + props.col)} class={if *is_checked {"sticker-visible"} else {"sticker-invisible"} }/>
 		</div>
+	}
+}
+
+struct StickerBoardClick {
+	pub row: usize,
+	pub col: usize,
+}
+
+
+struct StickerBoardState(BoardState);
+impl Reducible for StickerBoardState {
+	type Action = StickerBoardClick;
+
+	fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
+		dbg!("reducing!");
+		Self(self.0.toggle(action.row, action.col)).into()
 	}
 }
 
 #[function_component]
 pub fn StickerBoard() -> Html {
-	let rows = (0..4).flat_map(|r|
-		(0..4).map(move |c|
+	let board_state = use_reducer(|| StickerBoardState(BoardState::empty()));
+	
+	let cells = (0..16).map(move |idx| {
+			let r = (idx/4) as usize;
+			let c = (idx%4) as usize;
+
+			let toggle_sticker = {
+				let board_state = board_state.clone();
+				Callback::from(move |_| board_state.dispatch(StickerBoardClick{row: r, col: c}))
+			};
 			html!{
-				<StickerSlot image_path={format!("img/sticker-{}.png", 8*r+c)} />
+				<StickerSlot row={r} col={c} is_checked={board_state.0.is_sticker(r,c)} on_click={toggle_sticker} />
 			}
-			)
-		);
+		});
 	html!{
 		<div class="sticker-board">
-		{for rows}
+		{for cells}
 		</div>
 	}
 }

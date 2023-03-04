@@ -13,7 +13,11 @@ impl BoardState {
 	}
 
 	const fn bit_idx(row: usize, col:usize) -> usize {
-		row*4+col
+    // 0b0000_0000_0000_0000 
+    //   ^ (0,0)          ^
+    //              (3,2) |
+
+		15-(row*4+col)
 	}
 
 	pub fn is_sticker(&self, row: usize, col: usize) -> bool {
@@ -219,5 +223,12 @@ mod tests {
 		assert_eq!(crate::stats::shuffle_results::SHUFFLED_BOARD_COUNTS, board_counter.match_counts());
 		assert_eq!(crate::stats::shuffle_results::SHUFFLED_BOARD_COUNT, board_counter.num_boards());
 		assert_eq!(crate::stats::shuffle_results::SHUFFLED_BOARD_TOTAL_MATCHES, board_counter.total_matches());
+	}
+
+	#[test]
+	fn toggle_flips_sticker() {
+		assert_eq!(BoardState::new(0b1000_0000_0000_0000u16), BoardState::empty().toggle(0,0));
+		assert_eq!(BoardState::new(0b0000_0000_0001_0000u16), BoardState::empty().toggle(2,3));
+		assert_eq!(BoardState::empty(), BoardState::empty().toggle(3,1).toggle(3,1));
 	}
 }
