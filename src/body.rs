@@ -9,10 +9,10 @@ pub fn App() -> Html {
     		<Row>
         		<StickerBoard />
         		<Col>
-        			<StatsListing stats_type={StatsType::None} percent={59.2f32} percent_diff={0.0f32} />
-        			<StatsListing stats_type={StatsType::Bronze} percent={59.2f32} percent_diff={0.0f32} />
-        			<StatsListing stats_type={StatsType::Silver} percent={59.2f32} percent_diff={0.0f32} />
-        			<StatsListing stats_type={StatsType::Gold} percent={59.2f32} percent_diff={0.0f32} />
+        			<StatsListing stats_type={StatsType::None} percent={59.2f32} />
+        			<StatsListing stats_type={StatsType::Bronze} percent={59.2f32} />
+        			<StatsListing stats_type={StatsType::Silver} percent={59.2f32} />
+        			<StatsListing stats_type={StatsType::Gold} percent={59.2f32} />
         		</Col>
         	</Row>
         </div>

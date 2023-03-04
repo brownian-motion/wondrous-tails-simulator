@@ -32,15 +32,15 @@ impl StatsType {
 pub struct StatsListingProps {
 	pub stats_type: StatsType,
 	pub percent: f32,
-	pub percent_diff: f32,
 }
 
 #[function_component]
 pub fn StatsListing(props: &StatsListingProps) -> Html {
+	let percent_diff = props.percent - (crate::stats::percentage_shuffled_boards_with_matches(props.stats_type.num_matches().into()) as f32 )* 100.0;
 	html!{
 		<Row>
 			<img src={props.stats_type.image()}/>
-			{ format!("{} matches: {:.1}% ({:+.1}%)", props.stats_type.num_matches(), props.percent, props.percent_diff)}
+			{ format!("{} matches: {:.1}% ({:+.1}%)", props.stats_type.num_matches(), props.percent, percent_diff)}
 		</Row>
 	}
 }
