@@ -1,0 +1,40 @@
+body {
+	text-align: center;
+}
+
+.sticker-slot {
+	display: inline-grid;
+	width: 89px;
+	height: 87px;
+	text-align: center;
+}
+.sticker-board {
+	margin: auto;
+	width: 402px;
+	height: 372px;
+	padding-top: 30px;
+	background-image: url("img/sticker-board.png");
+	background-repeat: no-repeat;
+	background-size: cover;
+	border: 1px dashed darkgoldenrod;
+	overflow: visible;
+}
+
+.sticker-slot img {
+	transition: opacity .2s ease-in-out;
+	margin: auto;
+}
+
+.sticker-visible {
+	opacity: 100%;
+}
+.sticker-slot:hover img.sticker-visible {
+	opacity: 80%;
+}
+
+.sticker-invisible {
+	opacity: 5%;
+}
+.sticker-slot:hover img.sticker-invisible {
+	opacity: 25%;
+}

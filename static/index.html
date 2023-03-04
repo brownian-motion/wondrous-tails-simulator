@@ -5,58 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Wondrous Tails Simulator</title>
-	<style>
-		body {
-			text-align: center;
-		}
-
-		.sticker-slot {
-			display: inline-grid;
-			width: 89px;
-			height: 87px;
-			text-align: center;
-/*			transition: all .2s ease-in-out;*/
-		}
-/*		.sticker-slot:nth-of-type(8n+1), .sticker-slot:nth-of-type(8n+3), .sticker-slot:nth-of-type(8n+6), .sticker-slot:nth-of-type(8n+8) {
-			background-color: rgba(255, 200, 100, 0.5);
-		}
-		.sticker-slot:hover {
-			background-color: lightgray;
-		}*/
-		.sticker-board {
-			margin: auto;
-			width: 402px;
-			height: 372px;
-			padding-top: 30px;
-			background-image: url("img/sticker-board.png");
-			background-repeat: no-repeat;
-			background-size: cover;
-			border: 1px dashed darkgoldenrod;
-			overflow: visible;
-		}
-
-		.sticker-slot img {
-			transition: opacity .2s ease-in-out;
-			margin: auto;
-/*			object-fit: cover;
-			object-position: -64px;*/
-		}
-
-		.sticker-visible {
-			opacity: 100%;
-		}
-		.sticker-slot:hover img.sticker-visible {
-			opacity: 80%;
-		}
-
-		.sticker-invisible {
-			opacity: 5%;
-		}
-		.sticker-slot:hover img.sticker-invisible {
-			opacity: 25%;
-		}
-
-	</style>
+	<link data-trunk rel="css" href="index.css" />
 	<link data-trunk rel="rust" href="../Cargo.toml" />
 	<!-- <link rel="css" href="index.css"/> -->
 	<link data-trunk rel="copy-dir" href="img"/>
