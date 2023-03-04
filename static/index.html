@@ -12,34 +12,48 @@
 
 		.sticker-slot {
 			display: inline-grid;
-			width: 80px;
-			height: 80px;
-			border: 1px dashed black;
-			background-color: lightyellow;
+			width: 89px;
+			height: 87px;
 			text-align: center;
 /*			transition: all .2s ease-in-out;*/
 		}
+/*		.sticker-slot:nth-of-type(8n+1), .sticker-slot:nth-of-type(8n+3), .sticker-slot:nth-of-type(8n+6), .sticker-slot:nth-of-type(8n+8) {
+			background-color: rgba(255, 200, 100, 0.5);
+		}
 		.sticker-slot:hover {
 			background-color: lightgray;
-		}
-
+		}*/
 		.sticker-board {
 			margin: auto;
-			width: 400px;
-			height: 400px;
+			width: 402px;
+			height: 372px;
+			padding-top: 30px;
+			background-image: url("img/sticker-board.png");
+			background-repeat: no-repeat;
+			background-size: cover;
+			border: 1px dashed darkgoldenrod;
+			overflow: visible;
 		}
 
 		.sticker-slot img {
-			transition: opacity .5s ease-in-out;
+			transition: opacity .2s ease-in-out;
 			margin: auto;
+/*			object-fit: cover;
+			object-position: -64px;*/
 		}
 
 		.sticker-visible {
 			opacity: 100%;
 		}
+		.sticker-slot:hover img.sticker-visible {
+			opacity: 80%;
+		}
 
 		.sticker-invisible {
 			opacity: 5%;
+		}
+		.sticker-slot:hover img.sticker-invisible {
+			opacity: 25%;
 		}
 
 	</style>

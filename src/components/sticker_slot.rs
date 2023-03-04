@@ -17,19 +17,23 @@ pub fn StickerSlot(props: &StickerSlotProps) -> Html {
 	};
 	html! {
 		<div onclick={on_click} class="sticker-slot">
-		 	<img src={props.image_path.clone()} class={if *is_checked {"sticker-visible"} else {"sticker-invisible"} }/>
+		<img src={props.image_path.clone()} class={if *is_checked {"sticker-visible"} else {"sticker-invisible"} }/>
 		</div>
 	}
 }
 
 #[function_component]
 pub fn StickerBoard() -> Html {
+	let rows = (0..4).flat_map(|r|
+		(0..4).map(move |c|
+			html!{
+				<StickerSlot image_path={format!("img/sticker-{}.png", 8*r+c)} />
+			}
+			)
+		);
 	html!{
 		<div class="sticker-board">
-			<StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" />
-			<StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" />
-			<StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" />
-			<StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" /><StickerSlot image_path="img/journal.png" />
+		{for rows}
 		</div>
 	}
 }
