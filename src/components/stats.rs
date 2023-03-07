@@ -1,5 +1,5 @@
 use yew::prelude::*;
-use super::rowcol::{Row, RowColProps};
+use super::rowcol::{Row, Col};
 
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum StatsType {
@@ -31,16 +31,45 @@ impl StatsType {
 #[derive(Properties, PartialEq, Clone, Copy, Debug)]
 pub struct StatsListingProps {
 	pub stats_type: StatsType,
-	pub percent: f32,
+	pub percent: Option<f32>,
 }
 
 #[function_component]
 pub fn StatsListing(props: &StatsListingProps) -> Html {
-	let percent_diff = props.percent - (crate::stats::percentage_shuffled_boards_with_matches(props.stats_type.num_matches().into()) as f32 )* 100.0;
+	
+	let shuffled_probability : f32 = crate::stats::percentage_shuffled_boards_with_matches(props.stats_type.num_matches().into()) as f32;
+
 	html!{
 		<Row>
 			<img src={props.stats_type.image()}/>
-			{ format!("{} matches: {:.1}% ({:+.1}%)", props.stats_type.num_matches(), props.percent, percent_diff)}
+			{
+				match props.percent {
+					Some(p) => {
+						let percent_diff = p - shuffled_probability * 100.0;
+						format!("{} matches: {:.1}% ({:+.1}%)", props.stats_type.num_matches(), p, percent_diff)
+					},
+					None => format!("{} matches: {:.1}% (--.-%)", props.stats_type.num_matches(), shuffled_probability * 100.0),
+				}
+			}
 		</Row>
+	}
+}
+
+
+#[derive(Properties, PartialEq, Clone, Copy, Debug)]
+pub struct StatsListingTableProps {
+	pub stats: crate::stats::BoardMatchCounter,
+}
+
+#[function_component]
+pub fn StatsListingTable(props: &StatsListingTableProps) -> Html {
+	let distribution = props.stats.distribution();
+	html!{
+		<Col>
+			<StatsListing stats_type={StatsType::None}   percent={distribution.map(|d| 100.0 * d[0])} />
+			<StatsListing stats_type={StatsType::Bronze} percent={distribution.map(|d| 100.0 * d[1])} />
+			<StatsListing stats_type={StatsType::Silver} percent={distribution.map(|d| 100.0 * d[2])} />
+			<StatsListing stats_type={StatsType::Gold}   percent={distribution.map(|d| 100.0 * d[3])} />
+		</Col>
 	}
 }

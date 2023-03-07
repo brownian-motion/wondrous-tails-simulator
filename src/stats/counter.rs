@@ -1,7 +1,7 @@
 use core::ops::Add;
 use super::board::*;
 
-#[derive(Default,Debug,PartialEq)]
+#[derive(Default,Debug,Copy,Clone,PartialEq)]
 pub struct BoardMatchCounter {
 	counts: [u32;4],
 	total: u32,
@@ -38,13 +38,17 @@ impl BoardMatchCounter {
 		(self.total as f32)/(self.count as f32)
 	}
 
-	pub fn distribution(&self) -> [f32;4] {
-		[
-			(self.counts[0] as f32)/(self.count as f32),
-			(self.counts[1] as f32)/(self.count as f32),
-			(self.counts[2] as f32)/(self.count as f32),
-			(self.counts[3] as f32)/(self.count as f32)
-		]
+	pub fn distribution(&self) -> Option<[f32;4]> {
+		if self.count == 0 { 
+			None
+		} else {
+			Some([
+				(self.counts[0] as f32)/(self.count as f32),
+				(self.counts[1] as f32)/(self.count as f32),
+				(self.counts[2] as f32)/(self.count as f32),
+				(self.counts[3] as f32)/(self.count as f32)
+			])
+		}
 	}
 
 	pub fn num_boards(&self) -> u32 {
@@ -57,6 +61,10 @@ impl BoardMatchCounter {
 
 	pub fn match_counts(&self) -> [u32; 4] {
 		self.counts
+	}
+
+	pub fn is_empty(&self) -> bool {
+		self.count == 0
 	}
 }
 
@@ -77,10 +85,10 @@ impl Add for BoardMatchCounter {
 	fn add(self, other: Self) -> Self {
 		BoardMatchCounter {
 			counts: [
-				self.counts[0]+other.counts[0], 
-				self.counts[1]+other.counts[1],
-				self.counts[2]+other.counts[2],
-				self.counts[3]+other.counts[3],
+			self.counts[0]+other.counts[0], 
+			self.counts[1]+other.counts[1],
+			self.counts[2]+other.counts[2],
+			self.counts[3]+other.counts[3],
 			],
 			total: self.total + other.total,
 			count: self.count + other.count,
@@ -97,10 +105,10 @@ mod tests {
 		use crate::stats::shuffle_results::*;
 
 		let board_counter: BoardMatchCounter = 
-			(0..0xFFFFu16)
-				.map(|state| BoardState::new(state))
-		    	.filter(|board| board.count_stickers() == 9)
-		    	.collect();
+		(0..0xFFFFu16)
+		.map(|state| BoardState::new(state))
+		.filter(|board| board.count_stickers() == 9)
+		.collect();
 
 		assert_eq!(SHUFFLED_BOARD_COUNTS, board_counter.match_counts());
 		assert_eq!(SHUFFLED_BOARD_COUNT, board_counter.num_boards());
@@ -113,6 +121,6 @@ mod tests {
 		assert_eq!(
 			BoardMatchCounter::from_counts([1,3,3,7]),
 			BoardMatchCounter::from_counts([0,2,1,6]) + BoardMatchCounter::from_counts([1,1,2,1])
-		)
+			)
 	}
 }
