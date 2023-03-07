@@ -25,3 +25,8 @@ Feel free to point out bugs and suggest improvements! Please open an Issue or PR
 
 The simulator itself is licensed under the MIT License.
 The "Wondrous Tails" minigame and assets, as well as Final Fantasy 14, are copyright of Square Enix.
+
+## Implementation details
+This is a reactive application implemented in Rust using [yew](https://yew.rs/).
+
+The webapp is compiled to [WebAssembly](https://www.rust-lang.org/what/wasm) for tight performance, cross-platform availability, and small deployment size.
