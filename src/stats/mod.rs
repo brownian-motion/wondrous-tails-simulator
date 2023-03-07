@@ -1,8 +1,11 @@
-mod board;
+pub mod board;
 pub use board::*;
 
-mod shuffle_results;
+pub mod shuffle_results;
 pub use shuffle_results::*;
 
-mod tails_sim;
+pub mod tails_sim;
 pub use tails_sim::*;
+
+pub mod counter;
+pub use counter::*;
