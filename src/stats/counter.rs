@@ -1,15 +1,16 @@
+use core::ops::Add;
 use super::board::*;
 
 #[derive(Default,Debug,PartialEq)]
-pub struct BoardCounter {
+pub struct BoardMatchCounter {
 	counts: [u32;4],
 	total: u32,
 	count: u32,
 }
 
-impl BoardCounter {
+impl BoardMatchCounter {
 	pub const fn empty() -> Self{
-		BoardCounter {
+		BoardMatchCounter {
 			counts: [0;4],
 			total: 0,
 			count: 0,
@@ -19,7 +20,7 @@ impl BoardCounter {
 	pub const fn from_counts(counts: [u32;4]) -> Self {
 		let count = counts[0] + counts[1] + counts[2] + counts[3];
 		let total = counts[1] + counts[2] * 2 + counts[3] * 3;
-		BoardCounter {
+		BoardMatchCounter {
 			counts,
 			total,
 			count,
@@ -59,9 +60,9 @@ impl BoardCounter {
 	}
 }
 
-impl FromIterator<BoardState> for BoardCounter {
+impl FromIterator<BoardState> for BoardMatchCounter {
 	fn from_iter<I: IntoIterator<Item=BoardState>>(iter: I) -> Self {
-		let mut counter = BoardCounter::default();
+		let mut counter = BoardMatchCounter::default();
 		for board in iter {
 			counter.count(board);
 		}
@@ -70,21 +71,48 @@ impl FromIterator<BoardState> for BoardCounter {
 	}
 }
 
+impl Add for BoardMatchCounter {
+	type Output = BoardMatchCounter;
+
+	fn add(self, other: Self) -> Self {
+		BoardMatchCounter {
+			counts: [
+				self.counts[0]+other.counts[0], 
+				self.counts[1]+other.counts[1],
+				self.counts[2]+other.counts[2],
+				self.counts[3]+other.counts[3],
+			],
+			total: self.total + other.total,
+			count: self.count + other.count,
+		}
+	}
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
 
-
 	#[test]
 	fn test_counting_boards_with_9_stickers() {
-		let board_counter: BoardCounter = 
+		use crate::stats::shuffle_results::*;
+
+		let board_counter: BoardMatchCounter = 
 			(0..0xFFFFu16)
 				.map(|state| BoardState::new(state))
 		    	.filter(|board| board.count_stickers() == 9)
 		    	.collect();
 
-		assert_eq!(crate::stats::shuffle_results::SHUFFLED_BOARD_COUNTS, board_counter.match_counts());
-		assert_eq!(crate::stats::shuffle_results::SHUFFLED_BOARD_COUNT, board_counter.num_boards());
-		assert_eq!(crate::stats::shuffle_results::SHUFFLED_BOARD_TOTAL_MATCHES, board_counter.total_matches());
+		assert_eq!(SHUFFLED_BOARD_COUNTS, board_counter.match_counts());
+		assert_eq!(SHUFFLED_BOARD_COUNT, board_counter.num_boards());
+		assert_eq!(SHUFFLED_BOARD_TOTAL_MATCHES, board_counter.total_matches());
+	}
+
+	#[test]
+	fn test_addition() {
+		assert_eq!(BoardMatchCounter::empty(), BoardMatchCounter::empty() + BoardMatchCounter::empty());
+		assert_eq!(
+			BoardMatchCounter::from_counts([1,3,3,7]),
+			BoardMatchCounter::from_counts([0,2,1,6]) + BoardMatchCounter::from_counts([1,1,2,1])
+		)
 	}
 }

@@ -1,6 +1,6 @@
-use crate::stats::{BoardState, BoardCounter};
+use crate::stats::{BoardState, BoardMatchCounter};
 
-pub type SimulationResult = Result<BoardCounter, ()>;
+pub type SimulationResult = Result<BoardMatchCounter, ()>;
 pub fn simulate_until_9_stickers(board: BoardState) -> SimulationResult {
 	if board.count_stickers() > 9 {
 		return Err(());

@@ -6,7 +6,7 @@ fn generate_9_sticker_boards() -> impl Iterator<Item = stats::BoardState> {
 }
 
 fn main() {
-	let counter: BoardCounter = generate_9_sticker_boards().collect();
+	let counter: BoardMatchCounter = generate_9_sticker_boards().collect();
 	println!("{:?}", counter);
 	println!("average: {:}", counter.average());
 	println!("distribution: {:?}", counter.match_distribution());
