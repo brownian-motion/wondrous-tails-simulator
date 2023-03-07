@@ -20,39 +20,41 @@ pub fn StickerSlot(props: &StickerSlotProps) -> Html {
 	}
 }
 
-struct StickerBoardClick {
+pub struct StickerClickEvent {
 	pub row: usize,
 	pub col: usize,
 }
 
-
-struct StickerBoardState(BoardState);
-impl Reducible for StickerBoardState {
-	type Action = StickerBoardClick;
-
-	fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
-		log::info!("reducing! flipping state {} at {},{}", self.0.is_sticker(action.row,action.col), action.row, action.col);
-		Self(self.0.toggle(action.row, action.col)).into()
-	}
+#[derive(Properties, PartialEq)]
+pub struct StickerBoardProps{
+	pub board: BoardState,
+	pub on_click: Callback<StickerClickEvent>,
 }
 
+// impl Reducible for StickerBoardState {
+// 	type Action = StickerBoardClick;
+
+// 	fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
+// 		log::info!("reducing! flipping state {} at {},{}", self.0.is_sticker(action.row,action.col), action.row, action.col);
+// 		Self(self.0.toggle(action.row, action.col)).into()
+// 	}
+// }
+
 #[function_component]
-pub fn StickerBoard() -> Html {
-	let board_state = use_reducer(|| StickerBoardState(BoardState::empty()));
-	
+pub fn StickerBoard(props: &StickerBoardProps) -> Html {
 	let cells = (0..16).map(move |idx| {
 			let r = (idx/4) as usize;
 			let c = (idx%4) as usize;
 
 			let toggle_sticker = {
-				let board_state = board_state.clone();
+				let on_click = props.on_click.clone();
 				Callback::from(move |_|{
-					log::info!("dispatching at {},{}", r, c); 
-					board_state.dispatch(StickerBoardClick{row: r, col: c})
+					log::info!("clicked sticker at {},{}", r, c); 
+					on_click.emit(StickerClickEvent{row: r, col: c})
 				})
 			};
 			html!{
-				<StickerSlot row={r} col={c} is_checked={board_state.0.is_sticker(r,c)} on_click={toggle_sticker} />
+				<StickerSlot row={r} col={c} is_checked={props.board.is_sticker(r,c)} on_click={toggle_sticker} />
 			}
 		});
 	html!{
