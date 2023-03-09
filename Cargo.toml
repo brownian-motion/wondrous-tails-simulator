@@ -18,8 +18,8 @@ log = "0.4.6"
 name = "webapp"
 
 [[bin]]
-name = "simulator"
-required-features = ["simulator"]
+name = "measure_9_sticker_boards"
+required-features = ["measure_9_sticker_boards"]
 
 [features]
-simulator = []
+measure_9_sticker_boards = []

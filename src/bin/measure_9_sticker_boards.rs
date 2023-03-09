@@ -10,5 +10,5 @@ fn main() {
 	let counter: BoardMatchCounter = generate_9_sticker_boards().collect();
 	println!("{:?}", counter);
 	println!("average: {:}", counter.average());
-	println!("distribution: {:?}", counter.match_distribution());
+	println!("distribution: {:?}", counter.distribution());
 }
