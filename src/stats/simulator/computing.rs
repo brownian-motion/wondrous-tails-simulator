@@ -3,18 +3,51 @@ use super::WondrousTailsSimulator;
 
 pub type SimulationResult = Result<BoardMatchCounter, ()>;
 
-pub struct ComputedSimulator {}
+pub struct ComputingSimulator {}
 
-impl ComputedSimulator {
+impl ComputingSimulator {
 	pub fn new() -> Self {
-		ComputedSimulator{}
+		ComputingSimulator{}
 	}
 }
 
-impl WondrousTailsSimulator for ComputedSimulator {
+pub fn new() -> impl WondrousTailsSimulator {
+	ComputingSimulator::new()
+}
+
+impl WondrousTailsSimulator for ComputingSimulator {
 	fn simulate_until_9_stickers(&self, board: BoardState) -> Result<BoardMatchCounter, ()> {
-		let initial_sticker_count = board.count_stickers() as u64;
 		let result = match board.count_stickers() {
+			0 => board.iter()
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.collect(),
+			1 => board.iter()
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.collect(),
+			2 => board.iter()
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.flat_map(|b| b.add_sticker())
+				.collect(),
 			3 => board.iter()
 				.flat_map(|b| b.add_sticker())
 				.flat_map(|b| b.add_sticker())
@@ -62,7 +95,7 @@ mod tests {
 
 	#[test]
 	fn test_7_sticker_simulation() {
-		let sim = ComputedSimulator::new();
+		let sim = ComputingSimulator::new();
 		// _***
 		// *_*_
 		// **__
@@ -75,7 +108,7 @@ mod tests {
 
 	#[test]
 	fn test_8_sticker_simulation() {
-		let sim = ComputedSimulator::new();
+		let sim = ComputingSimulator::new();
 		// _***
 		// ***_
 		// **__
@@ -103,7 +136,7 @@ mod tests {
 
 	#[test]
 	fn test_3_sticker_simulation() {
-		let sim = ComputedSimulator::new();
+		let sim = ComputingSimulator::new();
 		let top_left_sim = sim.simulate_until_9_stickers(crate::stats::BoardState::new(0b1100_1000_0000_0000));
 		let bottom_right_sim = sim.simulate_until_9_stickers(crate::stats::BoardState::new(0b0000_0000_0001_0011));
 		assert_eq!(top_left_sim, bottom_right_sim);

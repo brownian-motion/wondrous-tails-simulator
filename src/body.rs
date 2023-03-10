@@ -1,6 +1,14 @@
-use yew::prelude::*;
-use crate::stats::{BoardMatchCounter, BoardState, WondrousTailsSimulator};
+use std::io::BufReader;
+use std::fs::File;
 use crate::components::*;
+use crate::stats::{BoardMatchCounter, BoardState, WondrousTailsSimulator, PrecomputedSimulator};
+use yew::prelude::*;
+
+pub fn load_simulator() -> std::io::Result<PrecomputedSimulator> {
+    let file = File::open("results.dat")?;
+    let read = BufReader::new(file);
+    PrecomputedSimulator::from_bytes(read)
+}
 
 #[function_component]
 pub fn App() -> Html {
@@ -16,18 +24,20 @@ pub fn App() -> Html {
             if new_board.count_stickers() < 3 || new_board.count_stickers() > 9 {
                 stats.set(BoardMatchCounter::empty());
             } else {
-                let sim_result = sim.simulate_until_9_stickers(new_board).unwrap_or(BoardMatchCounter::empty());
+                let sim_result = sim
+                    .simulate_until_9_stickers(new_board)
+                    .unwrap_or(BoardMatchCounter::empty());
                 stats.set(sim_result);
             }
         })
     };
     html! {
-    	<div class="root">
-    		<Row><img src="img/journal.png"/><h2>{ "Wondrous Tails Simulator" }</h2></Row>
-    		<Row>
-        		<StickerBoard board={*board} on_click={on_sticker_click} />
-        		<StatsListingTable stats={*stats} />
-        	</Row>
+        <div class="root">
+            <Row><img src="img/journal.png"/><h2>{ "Wondrous Tails Simulator" }</h2></Row>
+            <Row>
+                <StickerBoard board={*board} on_click={on_sticker_click} />
+                <StatsListingTable stats={*stats} />
+            </Row>
         </div>
     }
 }
